@@ -33,4 +33,16 @@ public class MemberService {
         Page<Member> members = memberRepository.findAll(pageable);
         return members;
     }
+
+    // 과제 1: 나이가 20 이상, 이름 기준 오름차순 정렬된 페이징 결과
+    public Page<Member> getAdultMembersSortedByName(int page, int size) {
+        // 이름 기준 오름차순 정렬 조건을 포함한 Pageable 객체 생성
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+        return memberRepository.findByAgeGreaterThanEqual(20, pageable);
+    }
+
+    // 과제 2: 이름이 주어진 값으로 시작하는 경우 필터링
+    public List<Member> getMembersByNamePrefix(String prefix) {
+        return memberRepository.findByNameStartingWith(prefix);
+    }
 }

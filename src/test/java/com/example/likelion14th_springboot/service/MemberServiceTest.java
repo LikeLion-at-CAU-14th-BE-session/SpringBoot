@@ -42,10 +42,11 @@ public class MemberServiceTest {
 
         IntStream.rangeClosed(1, 30).forEach(i -> {
             Member member = Member.builder()
-                    .name("user" + i)
+                    .name(String.format("user%02d", i)) // 문자열 정렬이 숫자 크기 정렬과 일치하도록 %02d 패딩 처리
                     .email("user" + i + "@test.com")
                     .address("서울시 테스트동 " + i + "번지")
                     .phoneNumber("010-1234-56" + String.format("%02d", i))
+                    .age(i) // 나이 추가
                     .deposit(1000 * i)
                     .isAdmin(false)
                     .role(Role.BUYER)
@@ -72,7 +73,7 @@ public class MemberServiceTest {
     void testGetByEmail() {
         Member actual = memberService.getByEmail("user1@test.com");
 
-        assertEquals(actual.getName(), "user1");
+        assertEquals(actual.getName(), "user01");
     }
 
     @Test
@@ -92,5 +93,45 @@ public class MemberServiceTest {
         assertThat(page.getTotalElements()).isEqualTo(30);
         assertThat(page.getTotalPages()).isEqualTo(3);
         assertThat(page.getContent().get(0).getName()).isEqualTo("user30");
+    }
+
+    // 과제용 테스트 코드
+    @Test
+    @DisplayName("이름이 주어진 값으로 시작하는 경우만 필터링")
+    void testGetMembersByNamePrefix() {
+        // given
+        String prefix = "user1"; // 패딩 처리 시 user10 ~ user19 가 매칭됨
+
+        // when
+        List<Member> members = memberService.getMembersByNamePrefix(prefix);
+
+        // then
+        // user10부터 user19까지 총 10개의 데이터가 조회되어야 함
+        assertThat(members).hasSize(10);
+        assertThat(members).extracting("name")
+                .containsExactly("user10", "user11", "user12", "user13", "user14", "user15", "user16", "user17", "user18", "user19");
+    }
+
+    @Test
+    @DisplayName("나이가 20 이상이고 이름 기준 오름차순 정렬된 페이징 결과 반환")
+    void testGetAdultMembersSortedByName() {
+        // given
+        int page = 0;
+        int size = 5;
+
+        // when
+        Page<Member> adultMembers = memberService.getAdultMembersSortedByName(page, size);
+
+        // then
+        // 나이가 20 이상인 멤버는 i가 20~30인 총 11명
+        assertThat(adultMembers.getTotalElements()).isEqualTo(11);
+        assertThat(adultMembers.getContent()).hasSize(5);
+
+        // 이름 오름차순 정렬 결과 검증 (패딩 덕분에 숫자가 커지는 순서와 문자열 사전 순서가 일치함)
+        assertThat(adultMembers.getContent().get(0).getName()).isEqualTo("user20");
+        assertThat(adultMembers.getContent().get(1).getName()).isEqualTo("user21");
+        assertThat(adultMembers.getContent().get(2).getName()).isEqualTo("user22");
+        assertThat(adultMembers.getContent().get(3).getName()).isEqualTo("user23");
+        assertThat(adultMembers.getContent().get(4).getName()).isEqualTo("user24");
     }
 }

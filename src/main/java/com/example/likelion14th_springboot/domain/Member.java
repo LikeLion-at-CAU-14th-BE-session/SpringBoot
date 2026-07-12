@@ -18,9 +18,10 @@ public class Member {
     private String address;
     private String email;
     private String phoneNumber;
+    private Integer age;
 
     @Builder
-    public Member(String name, String address, String email, String phoneNumber, Role role, Boolean isAdmin, Integer deposit){
+    public Member(String name, String address, String email, String phoneNumber, Integer age, Role role, Boolean isAdmin, Integer deposit){
         this.name = name;
         this.address = address;
         this.email = email;
@@ -28,6 +29,7 @@ public class Member {
         this.role = role;
         this.isAdmin = isAdmin;
         this.deposit = deposit;
+        this.age = age;
     }
 
     @Enumerated(EnumType.STRING)
