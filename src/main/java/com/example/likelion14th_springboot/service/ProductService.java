@@ -72,7 +72,6 @@ public class ProductService {
         return ProductResponseDto.fromEntity(product);
     }
 
-    // 추가
     // 상품 삭제
     @Transactional
     public void deleteProduct(Long productId, ProductDeleteRequestDto dto) {

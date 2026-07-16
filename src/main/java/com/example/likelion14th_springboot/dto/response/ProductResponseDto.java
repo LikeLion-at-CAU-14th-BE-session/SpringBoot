@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder // 추가
+@Builder
 @AllArgsConstructor
 public class ProductResponseDto {
     private Long id;
@@ -15,7 +15,6 @@ public class ProductResponseDto {
     private Integer stock;
     private String description;
 
-    // 추가
     public static ProductResponseDto fromEntity(Product product) {
         return ProductResponseDto.builder()
                 .id(product.getId())

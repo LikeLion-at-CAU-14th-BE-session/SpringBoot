@@ -46,7 +46,6 @@ public class Product extends BaseTimeEntity {
         this.stock -= amount;
     }
 
-    //추가
     public void update(String name, Integer price, Integer stock, String description) {
         this.name = name;
         this.price = price;

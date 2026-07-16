@@ -60,7 +60,6 @@ public class Member {
         this.deposit -= money;
     }
 
-    //추가
     public boolean isSeller() {
         return Role.SELLER.equals(this.role);
     }
