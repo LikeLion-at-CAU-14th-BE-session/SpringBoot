@@ -2,9 +2,7 @@ package com.example.likelion14th_springboot.domain;
 
 import com.example.likelion14th_springboot.enums.Role;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.*;
 
@@ -20,6 +18,19 @@ public class Member {
     private String address;
     private String email;
     private String phoneNumber;
+    private Integer age;
+
+    @Builder
+    public Member(String name, String address, String email, String phoneNumber, Integer age, Role role, Boolean isAdmin, Integer deposit){
+        this.name = name;
+        this.address = address;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.role = role;
+        this.isAdmin = isAdmin;
+        this.deposit = deposit;
+        this.age = age;
+    }
 
     @Enumerated(EnumType.STRING)
     private Role role; // 판매자면 SELLER, 구매자면 BUYER
