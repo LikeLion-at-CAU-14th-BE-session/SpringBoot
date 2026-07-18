@@ -1,10 +1,19 @@
 package com.example.likelion14th_springboot.domain;
 
 import com.example.likelion14th_springboot.enums.Role;
-import jakarta.persistence.*;
-import lombok.*;
-
-import java.util.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.HashSet;
+import java.util.Set;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -21,7 +30,8 @@ public class Member {
     private Integer age;
 
     @Builder
-    public Member(String name, String address, String email, String phoneNumber, Integer age, Role role, Boolean isAdmin, Integer deposit){
+    public Member(String name, String address, String email, String phoneNumber, Integer age, Role role,
+                  Boolean isAdmin, Integer deposit) {
         this.name = name;
         this.address = address;
         this.email = email;
@@ -42,10 +52,15 @@ public class Member {
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
     private Set<Product> products = new HashSet<>();
 
-    public void chargeDeposit(int money){
+    public void chargeDeposit(int money) {
         this.deposit += money;
     }
+
     public void useDeposit(int money) {
         this.deposit -= money;
+    }
+
+    public boolean isSeller() {
+        return Role.SELLER.equals(this.role);
     }
 }
