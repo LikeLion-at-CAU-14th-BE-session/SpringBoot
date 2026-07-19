@@ -1,4 +1,4 @@
-package com.example.likelion14th_springboot.config;
+package com.example.likelion14th_springboot.global.config;
 
 import com.example.likelion14th_springboot.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
