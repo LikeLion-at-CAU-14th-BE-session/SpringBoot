@@ -9,8 +9,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+
 import java.util.HashSet;
 import java.util.Set;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,15 +26,17 @@ public class Member {
     private Long id;
 
     private String name;
+    private String password;
     private String address;
     private String email;
     private String phoneNumber;
     private Integer age;
 
     @Builder
-    public Member(String name, String address, String email, String phoneNumber, Integer age, Role role,
+    public Member(String name, String password, String address, String email, String phoneNumber, Integer age, Role role,
                   Boolean isAdmin, Integer deposit) {
         this.name = name;
+        this.password = password;
         this.address = address;
         this.email = email;
         this.phoneNumber = phoneNumber;
