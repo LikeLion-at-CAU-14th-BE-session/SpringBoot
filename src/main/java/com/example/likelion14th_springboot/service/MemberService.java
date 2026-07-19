@@ -1,12 +1,16 @@
 package com.example.likelion14th_springboot.service;
 
 import com.example.likelion14th_springboot.domain.Member;
+import com.example.likelion14th_springboot.dto.request.JoinRequestDto;
+import com.example.likelion14th_springboot.global.exception.BusinessException;
+import com.example.likelion14th_springboot.global.exception.ErrorCode;
 import com.example.likelion14th_springboot.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +20,7 @@ import java.util.List;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public List<Member> getAllMembers() {
         List<Member> memberList = memberRepository.findAll();
@@ -44,5 +49,17 @@ public class MemberService {
     // 과제 2: 이름이 주어진 값으로 시작하는 경우 필터링
     public List<Member> getMembersByNamePrefix(String prefix) {
         return memberRepository.findByNameStartingWith(prefix);
+    }
+
+    public void join(JoinRequestDto joinRequestDto) {
+        // 해당 name이 존재하는 경우
+        if (memberRepository.existsByName(joinRequestDto.getName())) {
+            throw new BusinessException(ErrorCode.DUPLICATE_NAME); // 나중에 예외 처리
+        }
+
+        // 유저 객체 생성
+        Member member = joinRequestDto.toEntity(bCryptPasswordEncoder);
+
+        memberRepository.save(member);
     }
 }
