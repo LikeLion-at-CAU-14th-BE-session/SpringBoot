@@ -28,7 +28,11 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 
-	// h2 추가
+    // Spring Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
+
+    // h2 추가
 	runtimeOnly 'com.h2database:h2'
 
 	// jpa 쿼리파라미터 확인
