@@ -17,19 +17,29 @@ import com.example.likelion14th_springboot.dto.request.OrdersCreateRequestDto;
 import com.example.likelion14th_springboot.dto.request.OrdersUpdateRequestDto;
 import com.example.likelion14th_springboot.dto.response.OrdersResponseDto;
 import com.example.likelion14th_springboot.enums.DeliverStatus;
+import com.example.likelion14th_springboot.global.config.SecurityConfig;
+import com.example.likelion14th_springboot.jwt.JwtAuthenticationFilter;
 import com.example.likelion14th_springboot.service.OrdersService;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
-@WebMvcTest(OrdersController.class)
+@WebMvcTest(
+        controllers = OrdersController.class,
+        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+                classes = {SecurityConfig.class, JwtAuthenticationFilter.class})
+)
+@AutoConfigureMockMvc(addFilters = false)
 class OrdersControllerTest {
 
     @Autowired
