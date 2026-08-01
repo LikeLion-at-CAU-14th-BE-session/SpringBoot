@@ -59,16 +59,22 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            # deployment,secret 프로필로 떠 있는 기존 프로세스를 찾아 정상 종료
-            APP_PID=$(pgrep -f "spring.profiles.active=deployment,secret" || true)
-            if [ -n "$APP_PID" ]; then
-              echo "Stopping existing app (PID: $APP_PID)"
-              kill -15 $APP_PID
-              sleep 5
+            cd ${{ secrets.EC2_TARGET_DIR }}
+
+            # app.pid에 기록된 이전 프로세스가 살아있으면 정상 종료
+            # (pgrep -f 로 명령어 텍스트를 검색하면, 지금 이 배포 스크립트 자체의
+            #  텍스트도 매칭되어 스크립트 자신을 죽이는 문제가 있어 PID 파일로 대체)
+            if [ -f app.pid ]; then
+              OLD_PID=$(cat app.pid)
+              if kill -0 "$OLD_PID" 2>/dev/null; then
+                echo "Stopping existing app (PID: $OLD_PID)"
+                kill -15 "$OLD_PID"
+                sleep 5
+              fi
             fi
 
-            cd ${{ secrets.EC2_TARGET_DIR }}
             JAR_FILE=$(ls -t *.jar | head -n 1)
             echo "Starting $JAR_FILE"
             nohup java -jar "$JAR_FILE" --spring.profiles.active=deployment,secret > app.log 2>&1 &
+            echo $! > app.pid
             disown
