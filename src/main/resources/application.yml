@@ -13,4 +13,4 @@ spring:
             scope:
               - email
               - profile
-            redirect-uri: "http://54.180.30.17.nip.io:8080/login/oauth2/code/google"
+            redirect-uri: "http://localhost:8080/login/oauth2/code/google"
